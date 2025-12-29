@@ -371,6 +371,24 @@ def main() -> None:
           color: #fff !important;
           border-color: #fff !important;
         }
+        .coffee-button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.4rem 0.85rem;
+          border: 1px solid #fff;
+          color: #fff;
+          background: #000;
+          text-decoration: none;
+          border-radius: 8px;
+          font-weight: 600;
+          min-height: 2.6rem;
+          width: 100%;
+        }
+        .coffee-button:hover {
+          background: #111;
+          color: #fff;
+        }
         </style>
         """,
         unsafe_allow_html=True,
@@ -395,6 +413,13 @@ def main() -> None:
     default_season = seasons[-1] if seasons else None
 
     with st.sidebar:
+        st.header("Support my work")
+        st.markdown(
+            '<a class="coffee-button" href="https://buymeacoffee.com/scoreadvise" target="_blank">'
+            "Buy me a coffee ☕</a>",
+            unsafe_allow_html=True,
+        )
+        st.write("")
         st.header("Filters")
         selected_seasons = st.multiselect(
             "Season",
