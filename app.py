@@ -431,6 +431,19 @@ def main() -> None:
             default_leagues = leagues
         selected_leagues = st.multiselect("League", leagues, default=default_leagues)
         min_90s = st.slider("Minimum 90s", 0.0, 30.0, 5.0, 0.5)
+        selected_age = None
+        if "Age" in df.columns:
+            age_df = df.copy()
+            if selected_season:
+                age_df = age_df[age_df["Season"] == selected_season]
+            if selected_leagues:
+                age_df = age_df[age_df["League"].isin(selected_leagues)]
+            age_df = age_df[age_df["90s"] >= min_90s]
+            age_values = pd.to_numeric(age_df["Age"], errors="coerce").dropna()
+            if not age_values.empty:
+                age_min = int(age_values.min())
+                age_max = int(age_values.max())
+                selected_age = st.slider("Age", age_min, age_max, (age_min, age_max))
 
     df_base = df.copy()
     if selected_season:
@@ -438,6 +451,10 @@ def main() -> None:
     if selected_leagues:
         df_base = df_base[df_base["League"].isin(selected_leagues)]
     df_base = df_base[df_base["90s"] >= min_90s]
+    if selected_age:
+        age_low, age_high = selected_age
+        age_series = pd.to_numeric(df_base["Age"], errors="coerce")
+        df_base = df_base[age_series.between(age_low, age_high)]
 
     if df_base.empty:
         st.warning("No players match the current filters.")
