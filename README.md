@@ -10,8 +10,6 @@ Interactive Streamlit app to explore per-90 scatterplots for Top 5 league player
 ## Project Structure
 - `app.py`: Streamlit app.
 - `data/working_dataset.csv`: Input dataset used by the app.
-- `assests/2023_scoreadvise_transparent.png`: Logo shown in the header.
-- `Scatter_Analyse_Player.ipynb`: Original notebook used to build the analysis.
 
 ## Run Locally
 ```bash
