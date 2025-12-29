@@ -406,11 +406,11 @@ def main() -> None:
         return
 
     df = load_data(DATA_PATH)
-    seasons = sorted(df["Season"].dropna().unique().tolist())
+    seasons = sorted(df["Season"].dropna().unique().tolist(), reverse=True)
     leagues = sorted(df["League"].dropna().unique().tolist())
     metrics = metric_columns(df)
 
-    default_season = seasons[-1] if seasons else None
+    default_season = seasons[0] if seasons else None
 
     with st.sidebar:
         st.header("Support my work")
@@ -421,10 +421,10 @@ def main() -> None:
         )
         st.write("")
         st.header("Filters")
-        selected_seasons = st.multiselect(
+        selected_season = st.selectbox(
             "Season",
             seasons,
-            default=[default_season] if default_season else [],
+            index=0 if seasons else 0,
         )
         default_leagues = [league for league in TOP_LEAGUES if league in leagues]
         if not default_leagues:
@@ -433,8 +433,8 @@ def main() -> None:
         min_90s = st.slider("Minimum 90s", 0.0, 30.0, 5.0, 0.5)
 
     df_base = df.copy()
-    if selected_seasons:
-        df_base = df_base[df_base["Season"].isin(selected_seasons)]
+    if selected_season:
+        df_base = df_base[df_base["Season"] == selected_season]
     if selected_leagues:
         df_base = df_base[df_base["League"].isin(selected_leagues)]
     df_base = df_base[df_base["90s"] >= min_90s]
@@ -457,7 +457,11 @@ def main() -> None:
     st.session_state["position_map"] = position_map
 
     if "selected_player" not in st.session_state or st.session_state.selected_player not in player_list:
-        st.session_state.selected_player = player_list[0]
+        default_player = "michael olise"
+        if default_player in player_list:
+            st.session_state.selected_player = default_player
+        else:
+            st.session_state.selected_player = player_list[0]
 
     default_positions = position_map.get(st.session_state.selected_player, position_options)
     if "selected_positions" not in st.session_state:
